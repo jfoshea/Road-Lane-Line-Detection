@@ -35,6 +35,7 @@ We can convert an image from RGB or (BGR) space to HSL or HSV Color Space using 
     lower = np.uint8( [192,192,192] )
     upper = np.uint8( [255,255,255] )
     white_mask = cv2.inRange( img, lower, upper )
+
     lower = np.uint8( [192,192,0] )
     upper = np.uint8( [255,255,255] )
     yellow_mask = cv2.inRange( img, lower, upper )
@@ -42,15 +43,17 @@ We can convert an image from RGB or (BGR) space to HSL or HSV Color Space using 
     
 The white and yellow masks can be merge together using `cv2.bitwise_or( white_mask, yellow_mask )` and then the combined mask applied to the image using `cv2.bitwise_and( img, img, mask = color_mask )` to preserve the color and mask out (make remaining pixels black) to the remaining image. This process significantly reduces the noise in the image and provides a higher probability of a successful of identifying lane lines. For this project I created two masks: one for white lanes and one for yellow lanes as shown above.
 
-Example: combined white and yellow color mask
+**Example: Combined white and yellow color mask**
+
 ![Alt text](test_images_output/solidWhiteRight/1_filter_rgb_solidWhiteRight.jpg "Combined Color Mask")
 
 Some useful color space references: [Rapidtables](https://www.rapidtables.com/convert/color/) and [OpenCV Color Conversions](https://docs.opencv.org/3.1.0/de/d25/imgproc_color_conversions.html)
 
 ### Convert to Gray Scale 
 The color filtered image reduced the pixels in the image to the colors we need for finding lanes. However we ultimatley want to detect edges on lane lines and the edge detection algorithm doesn't use color for detection but identifies large differences in intensities in neighbouring pixels to detect edges. We can therefore convert the image to gray scale and reduce the image size without losing useful information. We can use the OpenCV routine `cv2.cvtColor()` to convert an image to gray scale. 
-Example: gray scaled image 
-![Alt text](test_images_output/solidWhiteRight/2_gray_rgb_solidWhiteRight.jpg "Gray Scaled Image")
+
+**Example: Gray scaled image** 
+![Alt text](test_images_output/solidWhiteRight/2_gray_solidWhiteRight.jpg "Gray Scaled Image")
 
 ### Apply Gaussian Smoothing 
 The image to this point was color filtered and converted to gray scale. Before we can run an edge detection algorithm we want to eliminate as much noise as possible from the image. After the smoothing algorithm is applied, the high frequency noise is removed and the edges in the image will be smoother and provide a higher probability of detecting good quality edges from the image.  A number of smoothing techniques can be used to filter out unwanted noise. Some typical smoothing filters are:
@@ -60,8 +63,8 @@ The image to this point was color filtered and converted to gray scale. Before w
 
 This project uses Gaussian smoothing because most edge-detection algorithms are sensitive to noise. Other filters are more sensitive to noisy environments. A Gaussian filter is typically used before edge detection because it reduces the noise in the image, and improves the result of the following edge-detection algorithm.  OpenCV has routine for Gaussian smoothing: `cv2.GaussianBlur()` Details can be found here: [OpenCV Smoothing Images](http://opencv-python-tutroals.readthedocs.io/en/latest/py_tutorials/py_imgproc/py_filtering/py_filtering.html)
 
-Example: Gaussian smoothed image 
-![Alt text](test_images_output/solidWhiteRight/3_smoothed_rgb_solidWhiteRight.jpg "Gaussian smoothed Image")
+**Example: Gaussian smoothed image** 
+![Alt text](test_images_output/solidWhiteRight/3_smoothed_solidWhiteRight.jpg "Gaussian smoothed Image")
 
 ### Find edges using Canny edge detection algorithm
 An edge detection algorithm detects areas of the image that have rapidly changing intensity values. Algorithms find these rapidly changing values by taking derivates of neighbouring pixels. Typically these rapidly changing areas are typically edges. 
@@ -79,8 +82,8 @@ One of the best edge detection algorithms is athe Canny Edge Detection.  The Pro
 
 The OpenCV canny function is `cv2.Canny(img, low_threshold, high_threshold)`. The low and high thresholds are used to accept of reject pixel gradients. If a pixel gradient is higher than the upper threshold, the pixel is accepted as an edge.  If a pixel gradient value is below the lower threshold, then it is rejected. If the pixel gradient is between the two thresholds, then it will be accepted only if it is connected to a pixel that is above the upper threshold. The recommended ratio of upper to lower thresholds is between 2:1 and 3:1. This project will use Canny edge detection with a low_threshold of 50 and high_threshold of 150.
 
-Example: Canny Edges Image
-![Alt text](test_images_output/solidWhiteRight/4_edges_rgb_solidWhiteRight.jpg "Canny Edges Image")
+**Example: Canny edges image**
+![Alt text](test_images_output/solidWhiteRight/4_edges_solidWhiteRight.jpg "Canny Edges Image")
 
 
 ### Identify a region of interest to focus in on edges
@@ -91,8 +94,8 @@ The parameters are :
 - vertices ( x,y points on the polygon to keep )  
 - ignore_mask_color ( color mask )  
            
-Example: ROI Image 
-![Alt text](test_images_output/solidWhiteRight/5_roi_rgb_solidWhiteRight.jpg "ROI Image")
+**Example: Region of interest image**
+![Alt text](test_images_output/solidWhiteRight/5_roi_solidWhiteRight.jpg "ROI Image")
 
 ### Probabilistic Hough Transform
 The Hough transform is a feature extraction technique used in image analysis, computer vision, and digital image processing. The purpose of the technique is to find imperfect instances of objects within a certain class of shapes by a voting procedure. This voting procedure is carried out in a parameter space, from which object candidates are obtained as local maxima in a so-called accumulator space that is explicitly constructed by the algorithm for computing the Hough transform.  The classical Hough transform was concerned with the identification of lines in the image, and this is what we need for lane finding. [Hough Transform Wiki](https://en.wikipedia.org/wiki/Hough_transform )
@@ -121,8 +124,8 @@ The steps involved for drawing lane lines is:
 8. Solve for x2: `x2 = ( y2-b ) / m`
 9. Overlay left and right lanes using `cv2.line()` 
 
-Example: Lines Image 
-![Alt text](test_images_output/solidWhiteRight/7_overlay_rgb_solidWhiteRight.jpg "Overlay Image")
+**Example: Lines overlayed on the image** 
+![Alt text](test_images_output/solidWhiteRight/7_overlay_solidWhiteRight.jpg "Overlay Image")
 
 ## Section 2 Pipeline processing on test images
 This section leverages the hard work done in section 1. In order to process video withing jupyter notebook I had to include VideoFileClip package and import HTML from iPython.display. Processing a video is just processing a series of images and therefore we can reuse many of the functions from `process_pipeline` in `process_image`. The save_image function is not used in `process_image` as the VideoFileClip application can be used to save the output videos to test_videos_output directory.

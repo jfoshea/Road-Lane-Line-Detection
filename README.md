@@ -27,5 +27,5 @@ The output images are located in `test_images_output` directory.
 The output videos are located in `test_videos_output` directory.
 
 ## Writeup 
-A detailed writeup of the pipeline construction and challenges are located here [writeup] (writeup.md)
+A detailed writeup of the pipeline construction and challenges are located here [writeup] (https://github.com/jfoshea/SDC-FindingLaneLines/blob/master/writeup.md)
 
