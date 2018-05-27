@@ -11,7 +11,7 @@ The following steps are used to run the pipeline:
     ```
 2. Clone the SDC-FindingLaneLines git repository
     ```  
-    $  git clone https://github.com/jfoshea/SDC-FindingLaneLines.git
+    $  git clone https://github.com/jfoshea/Road-Lane-Line-Detection.git
     ```
 
 3. enable cardnd-term1 virtualenv
@@ -27,5 +27,5 @@ The output images are located in `test_images_output` directory.
 The output videos are located in `test_videos_output` directory.
 
 ## Writeup 
-A detailed writeup of the pipeline construction and challenges are located here [writeup] (https://github.com/jfoshea/SDC-FindingLaneLines/blob/master/writeup.md)
+A detailed writeup of the pipeline construction and challenges are located here [writeup] (https://github.com/jfoshea/Road-Lane-Line-Detection/blob/master/writeup.md)
 
